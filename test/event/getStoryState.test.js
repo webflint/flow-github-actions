@@ -8,6 +8,13 @@ test('returns started when a branch is created', () => {
   expect(subject).toBe('started');
 });
 
+test('returns started when branch is pushed', () => {
+  const payload = loadFixture('branch_push');
+  const subject = getState(payload);
+
+  expect(subject).toBe('started');
+});
+
 test('returns finished when a PR is opened', () => {
   const payload = loadFixture('pr_opened');
   const subject = getState(payload);

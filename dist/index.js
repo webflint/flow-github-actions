@@ -13516,11 +13516,11 @@ module.exports = {
 /* 391 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-const wasBranchCreated = __webpack_require__(0);
+const wasPush = __webpack_require__(857);
 const wasChangesRequested = __webpack_require__(370);
 
 function isStarted(payload) {
-  return wasBranchCreated(payload) ||
+  return wasPush(payload) ||
     wasChangesRequested(payload);
 }
 
@@ -28836,7 +28836,17 @@ function unescapeJsonPointer(str) {
 
 /***/ }),
 /* 856 */,
-/* 857 */,
+/* 857 */
+/***/ (function(module) {
+
+function wasPush(payload) {
+  return 'ref' in payload;
+}
+
+module.exports = wasPush;
+
+
+/***/ }),
 /* 858 */
 /***/ (function(module) {
 
