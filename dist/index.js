@@ -320,8 +320,12 @@ module.exports = require("path");
 const core = __webpack_require__(470);
 
 function run() {
-  const event_path = core.getInput('GITHUB_EVENT_PATH', { required: true });
-  const api_key = core.getInput('TRACKER_API_KEY', { required: true });
+  core.debug('Does this output to the logs?');
+  core.debug(`env: ${process.env}`);
+
+  const event_path = process.env['GITHUB_EVENT_PATH'];
+  const api_key = process.env['TRACKER_API_KEY'];
+
   process({
     event_path,
     api_key
