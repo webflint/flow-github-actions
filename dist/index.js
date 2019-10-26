@@ -158,7 +158,6 @@ const getStoryId = __webpack_require__(888);
 
 function process(env) {
   const event = loadEvent(env.GITHUB_EVENT_PATH);
-  const apiKey = env.TRACKER_API_KEY;
   const state = getStoryState(event);
 
   if (state) {
@@ -166,6 +165,7 @@ function process(env) {
     const storyId = getStoryId(branchName);
     if (storyId) {
       core.info(`Updating story state for id:${storyId} to state:${state}`);
+      const apiKey = env.TRACKER_API_KEY;
       return updateStatus(apiKey, storyId, state);
     } else {
       core.debug(`Story id couldn't not be determined for update state:${state}`);
@@ -13516,11 +13516,11 @@ module.exports = {
 /* 391 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-const wasBranchCreated = __webpack_require__(0);
+const wasPush = __webpack_require__(857);
 const wasChangesRequested = __webpack_require__(370);
 
 function isStarted(payload) {
-  return wasBranchCreated(payload) ||
+  return wasPush(payload) ||
     wasChangesRequested(payload);
 }
 
@@ -28836,7 +28836,17 @@ function unescapeJsonPointer(str) {
 
 /***/ }),
 /* 856 */,
-/* 857 */,
+/* 857 */
+/***/ (function(module) {
+
+function wasPush(payload) {
+  return 'ref' in payload;
+}
+
+module.exports = wasPush;
+
+
+/***/ }),
 /* 858 */
 /***/ (function(module) {
 

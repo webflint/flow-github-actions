@@ -1,8 +1,8 @@
-const wasBranchCreated = require('../event/wasBranchCreated');
+const wasPush = require('../event/wasPush');
 const wasChangesRequested = require('../event/wasChangesRequested');
 
 function isStarted(payload) {
-  return wasBranchCreated(payload) ||
+  return wasPush(payload) ||
     wasChangesRequested(payload);
 }
 
