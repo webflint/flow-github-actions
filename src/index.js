@@ -1,7 +1,7 @@
 const process = require('./process');
 
 function run() {
-  process(process.env);
+  process();
 }
 
 run();
