@@ -42,18 +42,7 @@ module.exports =
 /******/ })
 /************************************************************************/
 /******/ ([
-/* 0 */
-/***/ (function(module) {
-
-function wasBranchCreated(payload) {
-  return 'ref' in payload &&
-    payload.ref_type === 'branch';
-}
-
-module.exports = wasBranchCreated;
-
-
-/***/ }),
+/* 0 */,
 /* 1 */,
 /* 2 */,
 /* 3 */,
@@ -12886,12 +12875,13 @@ module.exports = wasChangesRequested;
 /* 372 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-const wasBranchCreated = __webpack_require__(0);
+const wasPush = __webpack_require__(857);
 const hasPullRequest = __webpack_require__(112);
 
 function getBranchName(payload) {
-  if (wasBranchCreated(payload)) {
-    return payload.ref;
+  if (wasPush(payload)) {
+    const headRef = /^refs\/heads\//;
+    return payload.ref.replace(headRef, '');
   } else if (hasPullRequest(payload)) {
     return payload.pull_request.head.ref;
   }
