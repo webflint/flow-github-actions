@@ -1,0 +1,33 @@
+{
+  "name": "flow-github-actions",
+  "version": "0.1.0",
+  "description": "Github Actions to keep Pivotal Tracker story state in sync",
+  "main": "src/main.js",
+  "scripts": {
+    "test": "jest",
+    "test:debug": "node --inspect node_modules/.bin/jest --runInBand"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/webflint/flow-github-actions.git"
+  },
+  "keywords": [
+    "GitHub",
+    "Actions",
+    "Pivotal Tracker"
+  ],
+  "author": "Brett Suwyn",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/webflint/flow-github-actions/issues"
+  },
+  "homepage": "https://github.com/webflint/flow-github-actions#readme",
+  "dependencies": {
+    "@actions/core": "^1.1.1"
+  },
+  "devDependencies": {
+    "eslint": "^6.3.0",
+    "eslint-plugin-jest": "22.19.0",
+    "jest": "^24.9.0"
+  }
+}
