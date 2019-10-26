@@ -1818,8 +1818,6 @@ function SafeBuffer (arg, encodingOrOffset, length) {
   return Buffer(arg, encodingOrOffset, length)
 }
 
-SafeBuffer.prototype = Object.create(Buffer.prototype)
-
 // Copy static methods from Buffer
 copyProps(Buffer, SafeBuffer)
 
@@ -16559,7 +16557,7 @@ exports.Multipart = Multipart
 /* 477 */
 /***/ (function(module) {
 
-module.exports = {"author":{"name":"Jeremy Stashewsky","email":"jstash@gmail.com","website":"https://github.com/stash"},"contributors":[{"name":"Alexander Savin","website":"https://github.com/apsavin"},{"name":"Ian Livingstone","website":"https://github.com/ianlivingstone"},{"name":"Ivan Nikulin","website":"https://github.com/inikulin"},{"name":"Lalit Kapoor","website":"https://github.com/lalitkapoor"},{"name":"Sam Thompson","website":"https://github.com/sambthompson"},{"name":"Sebastian Mayr","website":"https://github.com/Sebmaster"}],"license":"BSD-3-Clause","name":"tough-cookie","description":"RFC6265 Cookies and Cookie Jar for node.js","keywords":["HTTP","cookie","cookies","set-cookie","cookiejar","jar","RFC6265","RFC2965"],"version":"2.4.3","homepage":"https://github.com/salesforce/tough-cookie","repository":{"type":"git","url":"git://github.com/salesforce/tough-cookie.git"},"bugs":{"url":"https://github.com/salesforce/tough-cookie/issues"},"main":"./lib/cookie","files":["lib"],"scripts":{"test":"vows test/*_test.js","cover":"nyc --reporter=lcov --reporter=html vows test/*_test.js"},"engines":{"node":">=0.8"},"devDependencies":{"async":"^1.4.2","nyc":"^11.6.0","string.prototype.repeat":"^0.2.0","vows":"^0.8.1"},"dependencies":{"psl":"^1.1.24","punycode":"^1.4.1"}};
+module.exports = {"_args":[["tough-cookie@2.4.3","/Users/brett/Dev/webflint/flow-github-actions"]],"_development":true,"_from":"tough-cookie@2.4.3","_id":"tough-cookie@2.4.3","_inBundle":false,"_integrity":"sha512-Q5srk/4vDM54WJsJio3XNn6K2sCG+CQ8G5Wz6bZhRZoAe/+TxjWB/GlFAnYEbkYVlON9FMk/fE3h2RLpPXo4lQ==","_location":"/request/tough-cookie","_phantomChildren":{},"_requested":{"type":"version","registry":true,"raw":"tough-cookie@2.4.3","name":"tough-cookie","escapedName":"tough-cookie","rawSpec":"2.4.3","saveSpec":null,"fetchSpec":"2.4.3"},"_requiredBy":["/request"],"_resolved":"https://registry.npmjs.org/tough-cookie/-/tough-cookie-2.4.3.tgz","_spec":"2.4.3","_where":"/Users/brett/Dev/webflint/flow-github-actions","author":{"name":"Jeremy Stashewsky","email":"jstash@gmail.com"},"bugs":{"url":"https://github.com/salesforce/tough-cookie/issues"},"contributors":[{"name":"Alexander Savin"},{"name":"Ian Livingstone"},{"name":"Ivan Nikulin"},{"name":"Lalit Kapoor"},{"name":"Sam Thompson"},{"name":"Sebastian Mayr"}],"dependencies":{"psl":"^1.1.24","punycode":"^1.4.1"},"description":"RFC6265 Cookies and Cookie Jar for node.js","devDependencies":{"async":"^1.4.2","nyc":"^11.6.0","string.prototype.repeat":"^0.2.0","vows":"^0.8.1"},"engines":{"node":">=0.8"},"files":["lib"],"homepage":"https://github.com/salesforce/tough-cookie","keywords":["HTTP","cookie","cookies","set-cookie","cookiejar","jar","RFC6265","RFC2965"],"license":"BSD-3-Clause","main":"./lib/cookie","name":"tough-cookie","repository":{"type":"git","url":"git://github.com/salesforce/tough-cookie.git"},"scripts":{"cover":"nyc --reporter=lcov --reporter=html vows test/*_test.js","test":"vows test/*_test.js"},"version":"2.4.3"};
 
 /***/ }),
 /* 478 */,
@@ -21448,7 +21446,7 @@ module.exports = function generate_not(it, $keyword, $ruleType) {
 const process = __webpack_require__(930);
 
 function run() {
-  process(process.env);
+  process();
 }
 
 run();
@@ -29351,237 +29349,7 @@ exports.ECKey = function(curve, key, isPublic)
 
 
 /***/ }),
-/* 887 */
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-/*
- * extsprintf.js: extended POSIX-style sprintf
- */
-
-var mod_assert = __webpack_require__(357);
-var mod_util = __webpack_require__(669);
-
-/*
- * Public interface
- */
-exports.sprintf = jsSprintf;
-exports.printf = jsPrintf;
-exports.fprintf = jsFprintf;
-
-/*
- * Stripped down version of s[n]printf(3c).  We make a best effort to throw an
- * exception when given a format string we don't understand, rather than
- * ignoring it, so that we won't break existing programs if/when we go implement
- * the rest of this.
- *
- * This implementation currently supports specifying
- *	- field alignment ('-' flag),
- * 	- zero-pad ('0' flag)
- *	- always show numeric sign ('+' flag),
- *	- field width
- *	- conversions for strings, decimal integers, and floats (numbers).
- *	- argument size specifiers.  These are all accepted but ignored, since
- *	  Javascript has no notion of the physical size of an argument.
- *
- * Everything else is currently unsupported, most notably precision, unsigned
- * numbers, non-decimal numbers, and characters.
- */
-function jsSprintf(ofmt)
-{
-	var regex = [
-	    '([^%]*)',				/* normal text */
-	    '%',				/* start of format */
-	    '([\'\\-+ #0]*?)',			/* flags (optional) */
-	    '([1-9]\\d*)?',			/* width (optional) */
-	    '(\\.([1-9]\\d*))?',		/* precision (optional) */
-	    '[lhjztL]*?',			/* length mods (ignored) */
-	    '([diouxXfFeEgGaAcCsSp%jr])'	/* conversion */
-	].join('');
-
-	var re = new RegExp(regex);
-
-	/* variadic arguments used to fill in conversion specifiers */
-	var args = Array.prototype.slice.call(arguments, 1);
-	/* remaining format string */
-	var fmt = ofmt;
-
-	/* components of the current conversion specifier */
-	var flags, width, precision, conversion;
-	var left, pad, sign, arg, match;
-
-	/* return value */
-	var ret = '';
-
-	/* current variadic argument (1-based) */
-	var argn = 1;
-	/* 0-based position in the format string that we've read */
-	var posn = 0;
-	/* 1-based position in the format string of the current conversion */
-	var convposn;
-	/* current conversion specifier */
-	var curconv;
-
-	mod_assert.equal('string', typeof (fmt),
-	    'first argument must be a format string');
-
-	while ((match = re.exec(fmt)) !== null) {
-		ret += match[1];
-		fmt = fmt.substring(match[0].length);
-
-		/*
-		 * Update flags related to the current conversion specifier's
-		 * position so that we can report clear error messages.
-		 */
-		curconv = match[0].substring(match[1].length);
-		convposn = posn + match[1].length + 1;
-		posn += match[0].length;
-
-		flags = match[2] || '';
-		width = match[3] || 0;
-		precision = match[4] || '';
-		conversion = match[6];
-		left = false;
-		sign = false;
-		pad = ' ';
-
-		if (conversion == '%') {
-			ret += '%';
-			continue;
-		}
-
-		if (args.length === 0) {
-			throw (jsError(ofmt, convposn, curconv,
-			    'has no matching argument ' +
-			    '(too few arguments passed)'));
-		}
-
-		arg = args.shift();
-		argn++;
-
-		if (flags.match(/[\' #]/)) {
-			throw (jsError(ofmt, convposn, curconv,
-			    'uses unsupported flags'));
-		}
-
-		if (precision.length > 0) {
-			throw (jsError(ofmt, convposn, curconv,
-			    'uses non-zero precision (not supported)'));
-		}
-
-		if (flags.match(/-/))
-			left = true;
-
-		if (flags.match(/0/))
-			pad = '0';
-
-		if (flags.match(/\+/))
-			sign = true;
-
-		switch (conversion) {
-		case 's':
-			if (arg === undefined || arg === null) {
-				throw (jsError(ofmt, convposn, curconv,
-				    'attempted to print undefined or null ' +
-				    'as a string (argument ' + argn + ' to ' +
-				    'sprintf)'));
-			}
-			ret += doPad(pad, width, left, arg.toString());
-			break;
-
-		case 'd':
-			arg = Math.floor(arg);
-			/*jsl:fallthru*/
-		case 'f':
-			sign = sign && arg > 0 ? '+' : '';
-			ret += sign + doPad(pad, width, left,
-			    arg.toString());
-			break;
-
-		case 'x':
-			ret += doPad(pad, width, left, arg.toString(16));
-			break;
-
-		case 'j': /* non-standard */
-			if (width === 0)
-				width = 10;
-			ret += mod_util.inspect(arg, false, width);
-			break;
-
-		case 'r': /* non-standard */
-			ret += dumpException(arg);
-			break;
-
-		default:
-			throw (jsError(ofmt, convposn, curconv,
-			    'is not supported'));
-		}
-	}
-
-	ret += fmt;
-	return (ret);
-}
-
-function jsError(fmtstr, convposn, curconv, reason) {
-	mod_assert.equal(typeof (fmtstr), 'string');
-	mod_assert.equal(typeof (curconv), 'string');
-	mod_assert.equal(typeof (convposn), 'number');
-	mod_assert.equal(typeof (reason), 'string');
-	return (new Error('format string "' + fmtstr +
-	    '": conversion specifier "' + curconv + '" at character ' +
-	    convposn + ' ' + reason));
-}
-
-function jsPrintf() {
-	var args = Array.prototype.slice.call(arguments);
-	args.unshift(process.stdout);
-	jsFprintf.apply(null, args);
-}
-
-function jsFprintf(stream) {
-	var args = Array.prototype.slice.call(arguments, 1);
-	return (stream.write(jsSprintf.apply(this, args)));
-}
-
-function doPad(chr, width, left, str)
-{
-	var ret = str;
-
-	while (ret.length < width) {
-		if (left)
-			ret += chr;
-		else
-			ret = chr + ret;
-	}
-
-	return (ret);
-}
-
-/*
- * This function dumps long stack traces for exceptions having a cause() method.
- * See node-verror for an example.
- */
-function dumpException(ex)
-{
-	var ret;
-
-	if (!(ex instanceof Error))
-		throw (new Error(jsSprintf('invalid type for %%r: %j', ex)));
-
-	/* Note that V8 prepends "ex.stack" with ex.toString(). */
-	ret = 'EXCEPTION: ' + ex.constructor.name + ': ' + ex.stack;
-
-	if (ex.cause && typeof (ex.cause) === 'function') {
-		var cex = ex.cause();
-		if (cex) {
-			ret += '\nCaused by: ' + dumpException(cex);
-		}
-	}
-
-	return (ret);
-}
-
-
-/***/ }),
+/* 887 */,
 /* 888 */
 /***/ (function(module) {
 
@@ -31211,9 +30979,9 @@ const getStoryState = __webpack_require__(39);
 const getBranchName = __webpack_require__(372);
 const getStoryId = __webpack_require__(888);
 
-function process(env) {
-  const apiKey = env.TRACKER_API_KEY;
-  const event = loadEvent(env.GITHUB_EVENT_PATH);
+function process() {
+  const event = loadEvent(process.env.GITHUB_EVENT_PATH);
+  const apiKey = process.env.TRACKER_API_KEY;
   const state = getStoryState(event);
 
   if (state) {
@@ -31771,7 +31539,7 @@ function SchemaObject(obj) {
 var mod_assertplus = __webpack_require__(489);
 var mod_util = __webpack_require__(669);
 
-var mod_extsprintf = __webpack_require__(887);
+var mod_extsprintf = __webpack_require__(697);
 var mod_isError = __webpack_require__(286).isError;
 var sprintf = mod_extsprintf.sprintf;
 
