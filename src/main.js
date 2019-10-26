@@ -1,3 +1,4 @@
+const core = require('@actions/core');
 const updateStatus = require('./tracker/updateState');
 const loadEvent = require('./loadEvent');
 const getStoryState = require('./event/getStoryState');
@@ -12,8 +13,17 @@ function process(env) {
   if (state) {
     const branchName = getBranchName(event);
     const storyId = getStoryId(branchName);
-    return updateStatus(apiKey, storyId, state);
+    if (storyId) {
+      core.info(`Updating story state for id:${storyId} to state:${state}`);
+      return updateStatus(apiKey, storyId, state);
+    } else {
+      core.debug(`Story id couldn't not be determined for update state:${state}`);
+    }
+
+  } else {
+    core.debug(`The story state could not be determined from the Github event`);
   }
+
 }
 
 module.exports = process;
