@@ -7,3 +7,10 @@ test('determines the branch name from an event', () => {
 
   expect(subject).toBe('feature/168805841/be-enabled-make-this-change');
 });
+
+test('determines the branch name from an event', () => {
+  const payload = loadFixture('branch_push');
+  const subject = getBranchName(payload);
+
+  expect(subject).toBe('feature/168805841/be-enabled-make-this-change');
+});
