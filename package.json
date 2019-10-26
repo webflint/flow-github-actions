@@ -2,8 +2,9 @@
   "name": "flow-github-actions",
   "version": "0.1.0",
   "description": "Github Actions to keep Pivotal Tracker story state in sync",
-  "main": "src/main.js",
+  "main": "src/index.js",
   "scripts": {
+    "build": "ncc build src/index.js",
     "test": "jest",
     "test:debug": "node --inspect node_modules/.bin/jest --runInBand"
   },
@@ -26,6 +27,7 @@
     "@actions/core": "^1.1.1"
   },
   "devDependencies": {
+    "@zeit/ncc": "0.20.5",
     "eslint": "^6.3.0",
     "eslint-plugin-jest": "22.19.0",
     "jest": "^24.9.0"

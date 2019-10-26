@@ -2,4 +2,4 @@ name: Sync Story Status
 description: Sync Tracker story state
 runs:
   using: 'node12'
-  main: 'src/main.js'
+  main: 'dist/index.js'
