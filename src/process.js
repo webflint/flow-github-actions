@@ -4,9 +4,9 @@ const getStoryState = require('./event/getStoryState');
 const getBranchName = require('./event/getBranchName');
 const getStoryId = require('./tracker/getStoryId');
 
-function process() {
-  const event = loadEvent(process.env.GITHUB_EVENT_PATH);
-  const apiKey = process.env.TRACKER_API_KEY;
+function process(inputs) {
+  const event = loadEvent(inputs.event_path);
+  const apiKey = inputs.api_key;
   const state = getStoryState(event);
 
   if (state) {
